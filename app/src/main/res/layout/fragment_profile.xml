@@ -482,6 +482,16 @@
                     android:text="Check for Updates"
                     app:icon="@drawable/ic_update" />
 
+                <!-- Force Background Check Button (for testing) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_force_background_check"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Force Background Check (Test)"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_sync" />
+
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>

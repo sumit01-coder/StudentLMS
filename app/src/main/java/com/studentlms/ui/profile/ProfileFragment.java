@@ -62,6 +62,7 @@ public class ProfileFragment extends Fragment {
     private MaterialButton btnConnectErp;
     private MaterialButton btnSyncErp;
     private MaterialButton btnCheckUpdates;
+    private MaterialButton btnForceBackgroundCheck;
     private CredentialManager credentialManager;
     private android.widget.FrameLayout btnNotificationsHeader;
     private View notificationBadge;
@@ -176,6 +177,7 @@ public class ProfileFragment extends Fragment {
         btnNotificationsHeader = view.findViewById(R.id.btn_notifications);
         notificationBadge = view.findViewById(R.id.notification_badge);
         btnCheckUpdates = view.findViewById(R.id.btn_check_updates);
+        btnForceBackgroundCheck = view.findViewById(R.id.btn_force_background_check);
 
         credentialManager = new CredentialManager(requireContext());
 
@@ -244,6 +246,17 @@ public class ProfileFragment extends Fragment {
 
         if (btnCheckUpdates != null) {
             btnCheckUpdates.setOnClickListener(v -> checkForUpdates());
+        }
+
+        if (btnForceBackgroundCheck != null) {
+            btnForceBackgroundCheck.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Forcing background update check...", Toast.LENGTH_SHORT).show();
+                androidx.work.OneTimeWorkRequest testRequest = new androidx.work.OneTimeWorkRequest.Builder(
+                        com.studentlms.services.UpdateCheckWorker.class)
+                        .build();
+                androidx.work.WorkManager.getInstance(requireContext()).enqueue(testRequest);
+                Toast.makeText(getContext(), "Check logcat for [UpdateCheck] logs", Toast.LENGTH_LONG).show();
+            });
         }
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {

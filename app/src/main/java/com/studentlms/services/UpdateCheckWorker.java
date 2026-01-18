@@ -43,7 +43,8 @@ public class UpdateCheckWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d(TAG, "Checking for updates...");
+        Log.d(TAG, "[UpdateCheck] Starting update check...");
+        Context context = getApplicationContext();
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -57,7 +58,10 @@ public class UpdateCheckWorker extends Worker {
                 String tagName = release.get("tag_name").getAsString();
                 String currentVersion = "v" + BuildConfig.VERSION_NAME;
 
+                Log.d(TAG, "[UpdateCheck] Latest version: " + tagName + ", Current: " + currentVersion);
+
                 if (!tagName.equals(currentVersion)) {
+                    Log.d(TAG, "[UpdateCheck] New version found! Fetching APK URL...");
                     // Get APK download URL from assets
                     JsonArray assets = release.getAsJsonArray("assets");
                     String apkUrl = null;
@@ -65,24 +69,28 @@ public class UpdateCheckWorker extends Worker {
                     for (int i = 0; i < assets.size(); i++) {
                         JsonObject asset = assets.get(i).getAsJsonObject();
                         String name = asset.get("name").getAsString();
+                        Log.d(TAG, "[UpdateCheck] Found asset: " + name);
                         if (name.endsWith(".apk")) {
                             apkUrl = asset.get("browser_download_url").getAsString();
+                            Log.d(TAG, "[UpdateCheck] APK URL: " + apkUrl);
                             break;
                         }
                     }
 
                     if (apkUrl != null) {
                         downloadAndInstallUpdate(tagName, apkUrl);
+                    } else {
+                        Log.e(TAG, "[UpdateCheck] No APK found in release assets");
                     }
+                } else {
+                    Log.d(TAG, "[UpdateCheck] Already on latest version");
                 }
-                return Result.success();
             }
+            return Result.success();
         } catch (IOException e) {
-            Log.e(TAG, "Error checking updates", e);
+            Log.e(TAG, "[UpdateCheck] Error checking updates", e);
             return Result.retry();
         }
-
-        return Result.failure();
     }
 
     private void downloadAndInstallUpdate(String version, String apkUrl) {

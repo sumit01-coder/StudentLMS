@@ -85,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
     private void scheduleUpdateCheck() {
         PeriodicWorkRequest updateRequest = new PeriodicWorkRequest.Builder(
                 UpdateCheckWorker.class,
-                12, TimeUnit.HOURS)
+                15, TimeUnit.MINUTES) // Changed from 12 hours to 15 minutes for testing
                 .build();
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "update_check",
                 ExistingPeriodicWorkPolicy.KEEP,
-                updateRequest); // KEEP ensures we don't restart time on app restart
+                updateRequest);
     }
 
     @Override
