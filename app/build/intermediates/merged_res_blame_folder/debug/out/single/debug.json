@@ -1,0 +1,238 @@
+[
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_profile.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_badge_circle.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\badge_circle.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_item_resource.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\item_resource.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_notification.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_notification.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_note.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_note.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_settings.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_resources.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_resources.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\menu_toolbar_menu.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\menu\\toolbar_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_sync.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_sync.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_send.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_send.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_assignment.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_assignment.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_ai_chat.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_ai_chat.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_light_mode.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_light_mode.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_calendar.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_calendar.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_dialog_add_reminder.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\dialog_add_reminder.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_dark_mode.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_dark_mode.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_dashboard.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_open.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_open.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_study_plan.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_study_plan.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_dialog_add_resource.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\dialog_add_resource.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_video.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_video.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_profile.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_lock.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_resource.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_resource.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_search.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_resources.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_resources.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_dialog_add_study_session.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\dialog_add_study_session.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_schedule.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_schedule.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_item_chat_message.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\item_chat_message.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_item_study_session.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\item_study_session.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_item_reminder.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\item_reminder.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_notifications.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_notifications.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_dashboard.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_add.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_add.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_link.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_link.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_pdf.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_pdf.xml"
+    },
+    {
+        "merged": "com.studentlms.app-merged_res-59:/drawable_ic_update.xml.flat",
+        "source": "com.studentlms.app-main-61:/drawable/ic_update.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_upload.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_upload.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_fragment_reminders.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\fragment_reminders.xml"
+    },
+    {
+        "merged": "com.studentlms.app-merged_res-59:/layout_fragment_profile.xml.flat",
+        "source": "com.studentlms.app-main-61:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\drawable_ic_ai_chat.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\drawable\\ic_ai_chat.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_item_lms_assignment.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\item_lms_assignment.xml"
+    },
+    {
+        "merged": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-merged_res-59:\\layout_dialog_erp_login.xml.flat",
+        "source": "C:\\Users\\sumit\\.gradle\\daemon\\8.5\\com.studentlms.app-main-61:\\layout\\dialog_erp_login.xml"
+    }
+]

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Greeting Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/CardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+                
+                <TextView
+                    android:id="@+id/greeting_text"
+                    style="@style/TextHeadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Good Morning!" />
+                
+                <TextView
+                    android:id="@+id/streak_text"
+                    style="@style/TextBody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Study Streak: 5 days 🔥" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- LMS Assignments Section -->
+        <TextView
+            style="@style/TextTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Upcoming Assignments" />
+
+        <!-- Sync Button -->
+        <Button
+            android:id="@+id/sync_button"
+            style="@style/ButtonOutlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="12dp"
+            android:text="@string/dashboard_sync_now" />
+
+        <!-- Assignments RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/assignments_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- AI Insights Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/CardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+                
+                <TextView
+                    style="@style/TextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dashboard_ai_insights" />
+                
+                <TextView
+                    android:id="@+id/ai_recommendation"
+                    style="@style/TextBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Based on your study pattern, we recommend focusing on Mathematics today at 4:00 PM for 2 hours." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Quick Actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/start_study_button"
+                style="@style/ButtonPrimary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Start Study Session" />
+
+            <Button
+                android:id="@+id/add_resource_button"
+                style="@style/ButtonOutlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Add Resource" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

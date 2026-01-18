@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Primary Colors -->
+    <color name="primary">#667eea</color>
+    <color name="primary_dark">#4c63d2</color>
+    <color name="primary_light">#9face6</color>
+    <color name="accent">#f093fb</color>
+    <color name="accent_light">#f3a4fc</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F5F7FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#1a202c</color>
+    <color name="text_secondary">#718096</color>
+    <color name="text_hint">#a0aec0</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#48bb78</color>
+    <color name="warning">#ed8936</color>
+    <color name="error">#f56565</color>
+    <color name="info">#4299e1</color>
+    
+    <!-- Subject Colors -->
+    <color name="subject_blue">#4299e1</color>
+    <color name="subject_green">#48bb78</color>
+    <color name="subject_purple">#9f7aea</color>
+    <color name="subject_orange">#ed8936</color>
+    <color name="subject_red">#f56565</color>
+    <color name="subject_teal">#38b2ac</color>
+    
+    <!-- LMS Platform Colors -->
+    <color name="google_classroom">#0f9d58</color>
+    <color name="moodle">#ff8800</color>
+    <color name="canvas">#e13f2b</color>
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#667eea</color>
+    <color name="gradient_end">#764ba2</color>
+    
+    <!-- Launcher Icon -->
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

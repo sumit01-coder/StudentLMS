@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/nav_dashboard" />
+    <item
+        android:id="@+id/navigation_study_plan"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/nav_study_plan" />
+    <item
+        android:id="@+id/navigation_resources"
+        android:icon="@drawable/ic_resources"
+        android:title="@string/nav_resources" />
+    <item
+        android:id="@+id/navigation_ai_chat"
+        android:icon="@drawable/ic_ai_chat"
+        android:title="@string/nav_ai_chat" />
+    <item
+        android:id="@+id/navigation_reminders"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/nav_reminders" />
+</menu>
