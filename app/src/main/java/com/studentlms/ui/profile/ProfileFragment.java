@@ -56,6 +56,7 @@ public class ProfileFragment extends Fragment {
     private MaterialButton btnAddAccount;
     private SwitchMaterial switchNotifications;
     private SwitchMaterial switchAutoSync;
+    private SwitchMaterial switchAutoUpdate;
     private SwitchMaterial switchAppLock;
 
     private SharedPreferences preferences;
@@ -139,6 +140,7 @@ public class ProfileFragment extends Fragment {
         btnAddAccount = view.findViewById(R.id.btn_add_account);
         switchNotifications = view.findViewById(R.id.switch_notifications);
         switchAutoSync = view.findViewById(R.id.switch_auto_sync);
+        switchAutoUpdate = view.findViewById(R.id.switch_auto_update);
         switchAppLock = view.findViewById(R.id.switch_app_lock);
 
         // Get shared preferences
@@ -265,6 +267,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        switchAutoUpdate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferences.edit().putBoolean("auto_update", isChecked).apply();
+            Toast.makeText(getContext(), "Auto-download " + (isChecked ? "enabled" : "disabled"),
+                    Toast.LENGTH_SHORT).show();
+        });
+
         // App Lock toggle
         switchAppLock.setOnCheckedChangeListener((buttonView, isChecked) ->
 
@@ -319,11 +327,13 @@ public class ProfileFragment extends Fragment {
         // Load saved preferences
         boolean notifications = preferences.getBoolean("notifications", true);
         boolean autoSync = preferences.getBoolean("auto_sync", true);
+        boolean autoUpdate = preferences.getBoolean("auto_update", true);
         boolean appLock = preferences.getBoolean("app_lock", false);
         String theme = preferences.getString("theme", "system");
 
         switchNotifications.setChecked(notifications);
         switchAutoSync.setChecked(autoSync);
+        switchAutoUpdate.setChecked(autoUpdate);
         switchAppLock.setChecked(appLock);
 
     }

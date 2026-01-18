@@ -53,18 +53,22 @@ public class UpdateCheckWorker extends Worker {
 
             if (releaseInfo != null) {
                 Log.d(TAG, "[UpdateCheck] New version found: " + releaseInfo.tagName);
-                Log.d(TAG, "[UpdateCheck] Changelog: " + releaseInfo.body); // Log changelog
+                Log.d(TAG, "[UpdateCheck] Changelog: " + releaseInfo.body);
 
-                // For now, we continue the auto-download behavior for background checks
-                // Improvement: Maybe show notification "Update Available" with changelog FIRST?
-                // But to "improve" per user request, simply notifying allows them to see the
-                // changelog in the dialog.
-                // However, without auto-download, they have to wait.
-                // Decision: Auto-download is nice. Let's keep it but maybe improve the
-                // notification content or just the dialog manual check.
-                // I will keep auto-download but add changelog to log.
+                // Check user preference for auto-download
+                android.content.SharedPreferences prefs = context.getSharedPreferences("StudentLMSPrefs",
+                        Context.MODE_PRIVATE);
+                boolean autoDownload = prefs.getBoolean("auto_update", true);
 
-                downloadAndInstallUpdate(releaseInfo.tagName, releaseInfo.downloadUrl);
+                if (autoDownload) {
+                    // Auto-download enabled - proceed with automatic download
+                    Log.d(TAG, "[UpdateCheck] Auto-download enabled - downloading update");
+                    downloadAndInstallUpdate(releaseInfo.tagName, releaseInfo.downloadUrl);
+                } else {
+                    // Auto-download disabled - show notification with action
+                    Log.d(TAG, "[UpdateCheck] Auto-download disabled - showing notification");
+                    showUpdateAvailableNotification(releaseInfo);
+                }
             } else {
                 Log.d(TAG, "[UpdateCheck] No new updates found.");
             }
@@ -199,6 +203,49 @@ public class UpdateCheckWorker extends Worker {
 
         if (notificationManager != null) {
             notificationManager.notify(1002, builder.build());
+        }
+    }
+
+    private void showUpdateAvailableNotification(com.studentlms.utils.GithubUpdateManager.ReleaseInfo releaseInfo) {
+        Context context = getApplicationContext();
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "App Updates",
+                    NotificationManager.IMPORTANCE_HIGH);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        // Create pending intent to open Profile/Settings
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
+                context, 0, intent,
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? android.app.PendingIntent.FLAG_IMMUTABLE : 0);
+
+        // Extract first line of changelog as preview
+        String changelogPreview = releaseInfo.body;
+        if (changelogPreview.length() > 100) {
+            changelogPreview = changelogPreview.substring(0, 100) + "...";
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_update)
+                .setContentTitle("Update Available: " + releaseInfo.tagName)
+                .setContentText(changelogPreview)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("What's New:\n" + releaseInfo.body))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .addAction(R.drawable.ic_update, "Download", pendingIntent);
+
+        if (notificationManager != null) {
+            notificationManager.notify(1003, builder.build());
         }
     }
 }

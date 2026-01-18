@@ -127,8 +127,11 @@
     <string name="theme">Theme</string>
     <string name="theme_desc">Choose your preferred theme</string>
     <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
+    <string name="theme_dark">Dark Theme</string>
     <string name="theme_system">System Default</string>
+    <string name="auto_download_updates">Auto-Download Updates</string>
+    <string name="auto_download_updates_desc">Automatically download new versions</string>
+
     
     <!-- ERP Portal -->
     <string name="erp_portal_sync">ERP Portal Sync</string>
