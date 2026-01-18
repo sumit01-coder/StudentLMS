@@ -40,6 +40,8 @@ import com.google.gson.JsonObject;
 import android.content.Intent;
 import android.net.Uri;
 import com.studentlms.BuildConfig;
+import com.studentlms.utils.UpdateDownloader;
+import com.google.gson.JsonArray;
 
 public class ProfileFragment extends Fragment {
 
@@ -79,10 +81,10 @@ public class ProfileFragment extends Fragment {
                         String json = response.body().string();
                         JsonObject release = new Gson().fromJson(json, JsonObject.class);
                         String tagName = release.get("tag_name").getAsString();
-                        String htmlUrl = release.get("html_url").getAsString();
+                        JsonArray assets = release.has("assets") ? release.getAsJsonArray("assets") : new JsonArray();
 
                         if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> handleUpdateResponse(tagName, htmlUrl));
+                            getActivity().runOnUiThread(() -> handleUpdateResponse(tagName, assets));
                         }
                     } else {
                         if (getActivity() != null) {
@@ -100,20 +102,35 @@ public class ProfileFragment extends Fragment {
         }).start();
     }
 
-    private void handleUpdateResponse(String latestVersion, String downloadUrl) {
+    private void handleUpdateResponse(String latestVersion, JsonArray assets) {
         // Assuming tagName format is "v1.1.3" and versionName is "1.1.3"
         String currentVersion = "v" + BuildConfig.VERSION_NAME;
 
         if (!latestVersion.equals(currentVersion)) {
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Update Available")
-                    .setMessage("New version " + latestVersion + " is available.\nCurrent: " + currentVersion)
-                    .setPositiveButton("Download", (dialog, which) -> {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Later", null)
-                    .show();
+            // Find APK download URL
+            String apkUrl = null;
+            for (int i = 0; i < assets.size(); i++) {
+                JsonObject asset = assets.get(i).getAsJsonObject();
+                String name = asset.get("name").getAsString();
+                if (name.endsWith(".apk")) {
+                    apkUrl = asset.get("browser_download_url").getAsString();
+                    break;
+                }
+            }
+
+            if (apkUrl != null) {
+                String finalApkUrl = apkUrl;
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Update Available")
+                        .setMessage("New version " + latestVersion + " is available.\nCurrent: " + currentVersion)
+                        .setPositiveButton("Download", (dialog, which) -> {
+                            UpdateDownloader.downloadAndInstall(requireContext(), latestVersion, finalApkUrl);
+                        })
+                        .setNegativeButton("Later", null)
+                        .show();
+            } else {
+                Toast.makeText(getContext(), "Update info unavailable", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(getContext(), "You are using the latest version: " + currentVersion, Toast.LENGTH_LONG)
                     .show();
