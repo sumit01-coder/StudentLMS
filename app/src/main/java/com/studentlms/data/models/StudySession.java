@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey;
 public class StudySession {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int subjectId;
+    private String subjectName;
     private long startTime;
     private long endTime;
     private String notes;
     private boolean completed;
 
-    public StudySession(int subjectId, long startTime, long endTime, String notes, boolean completed) {
-        this.subjectId = subjectId;
+    public StudySession(String subjectName, long startTime, long endTime, String notes, boolean completed) {
+        this.subjectName = subjectName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.notes = notes;
@@ -31,12 +31,12 @@ public class StudySession {
         this.id = id;
     }
 
-    public int getSubjectId() {
-        return subjectId;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
     public long getStartTime() {

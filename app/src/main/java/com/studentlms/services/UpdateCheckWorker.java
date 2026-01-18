@@ -46,45 +46,27 @@ public class UpdateCheckWorker extends Worker {
         Log.d(TAG, "[UpdateCheck] Starting update check...");
         Context context = getApplicationContext();
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("https://api.github.com/repos/sumit01-coder/StudentLMS/releases/latest")
-                .build();
+        try {
+            String currentVersion = "v" + BuildConfig.VERSION_NAME;
+            com.studentlms.utils.GithubUpdateManager.ReleaseInfo releaseInfo = com.studentlms.utils.GithubUpdateManager
+                    .checkForUpdatesSync(currentVersion);
 
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful() && response.body() != null) {
-                String json = response.body().string();
-                JsonObject release = new Gson().fromJson(json, JsonObject.class);
-                String tagName = release.get("tag_name").getAsString();
-                String currentVersion = "v" + BuildConfig.VERSION_NAME;
+            if (releaseInfo != null) {
+                Log.d(TAG, "[UpdateCheck] New version found: " + releaseInfo.tagName);
+                Log.d(TAG, "[UpdateCheck] Changelog: " + releaseInfo.body); // Log changelog
 
-                Log.d(TAG, "[UpdateCheck] Latest version: " + tagName + ", Current: " + currentVersion);
+                // For now, we continue the auto-download behavior for background checks
+                // Improvement: Maybe show notification "Update Available" with changelog FIRST?
+                // But to "improve" per user request, simply notifying allows them to see the
+                // changelog in the dialog.
+                // However, without auto-download, they have to wait.
+                // Decision: Auto-download is nice. Let's keep it but maybe improve the
+                // notification content or just the dialog manual check.
+                // I will keep auto-download but add changelog to log.
 
-                if (!tagName.equals(currentVersion)) {
-                    Log.d(TAG, "[UpdateCheck] New version found! Fetching APK URL...");
-                    // Get APK download URL from assets
-                    JsonArray assets = release.getAsJsonArray("assets");
-                    String apkUrl = null;
-
-                    for (int i = 0; i < assets.size(); i++) {
-                        JsonObject asset = assets.get(i).getAsJsonObject();
-                        String name = asset.get("name").getAsString();
-                        Log.d(TAG, "[UpdateCheck] Found asset: " + name);
-                        if (name.endsWith(".apk")) {
-                            apkUrl = asset.get("browser_download_url").getAsString();
-                            Log.d(TAG, "[UpdateCheck] APK URL: " + apkUrl);
-                            break;
-                        }
-                    }
-
-                    if (apkUrl != null) {
-                        downloadAndInstallUpdate(tagName, apkUrl);
-                    } else {
-                        Log.e(TAG, "[UpdateCheck] No APK found in release assets");
-                    }
-                } else {
-                    Log.d(TAG, "[UpdateCheck] Already on latest version");
-                }
+                downloadAndInstallUpdate(releaseInfo.tagName, releaseInfo.downloadUrl);
+            } else {
+                Log.d(TAG, "[UpdateCheck] No new updates found.");
             }
             return Result.success();
         } catch (IOException e) {

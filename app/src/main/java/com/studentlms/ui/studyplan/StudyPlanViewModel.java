@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.studentlms.data.dao.LMSAssignmentDao;
 import com.studentlms.data.dao.StudySessionDao;
 import com.studentlms.data.database.AppDatabase;
 import com.studentlms.data.models.StudySession;
@@ -20,13 +21,21 @@ public class StudyPlanViewModel extends AndroidViewModel {
     private final LiveData<List<StudySession>> upcomingSessions;
     private final ExecutorService executorService;
 
+    private final LMSAssignmentDao lmsAssignmentDao; // New field
+
     public StudyPlanViewModel(@NonNull Application application) {
         super(application);
-        AppDatabase database = AppDatabase.getInstance(application);
+        AppDatabase database = AppDatabase.getInstance(application); // Keep this for consistency or refactor as per
+                                                                     // instruction
         studySessionDao = database.studySessionDao();
+        lmsAssignmentDao = database.lmsAssignmentDao(); // Initialize new DAO
         allSessions = studySessionDao.getAllSessions();
         upcomingSessions = studySessionDao.getUpcomingSessions(System.currentTimeMillis());
         executorService = Executors.newSingleThreadExecutor();
+    }
+
+    public LiveData<List<String>> getDistinctCourseNames() {
+        return lmsAssignmentDao.getDistinctCourseNames();
     }
 
     public LiveData<List<StudySession>> getAllSessions() {

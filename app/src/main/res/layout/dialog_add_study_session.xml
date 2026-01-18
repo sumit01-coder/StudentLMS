@@ -18,23 +18,24 @@
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface" />
 
-        <!-- Subject ID Input (simplified) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/subject_id"
-            app:boxBackgroundMode="outline">
+            android:text="@string/subject"
+            android:textColor="?attr/colorOnSurface" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_subject_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="1"
-                android:maxLines="1" />
+        <Spinner
+            android:id="@+id/spinner_subject"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_remind_me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remind_me_when_starts" />
 
         <!-- Start and End Time Pickers -->
         <LinearLayout

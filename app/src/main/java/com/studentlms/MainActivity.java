@@ -23,6 +23,7 @@ import androidx.work.WorkManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import java.util.concurrent.TimeUnit;
 import com.studentlms.services.UpdateCheckWorker;
+import com.studentlms.services.AssignmentReminderWorker;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         scheduleUpdateCheck();
+        scheduleAssignmentReminder();
     }
 
     private void scheduleUpdateCheck() {
@@ -97,6 +99,18 @@ public class MainActivity extends AppCompatActivity {
                 "update_check",
                 ExistingPeriodicWorkPolicy.KEEP,
                 updateRequest);
+    }
+
+    private void scheduleAssignmentReminder() {
+        PeriodicWorkRequest reminderRequest = new PeriodicWorkRequest.Builder(
+                AssignmentReminderWorker.class,
+                1, TimeUnit.HOURS)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "assignment_reminder",
+                ExistingPeriodicWorkPolicy.KEEP,
+                reminderRequest);
     }
 
     @Override

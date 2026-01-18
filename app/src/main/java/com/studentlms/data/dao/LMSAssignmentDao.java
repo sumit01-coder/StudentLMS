@@ -39,4 +39,10 @@ public interface LMSAssignmentDao {
 
     @Query("SELECT * FROM lms_assignments WHERE dueDate BETWEEN :startTime AND :endTime ORDER BY dueDate ASC")
     List<LMSAssignment> getAssignmentsByDateRange(long startTime, long endTime);
+
+    @Query("SELECT DISTINCT courseName FROM lms_assignments ORDER BY courseName ASC")
+    LiveData<List<String>> getDistinctCourseNames();
+
+    @Query("SELECT * FROM lms_assignments WHERE isSubmitted = 0 AND dueDate > :currentTime AND dueDate <= :endTime ORDER BY dueDate ASC")
+    List<LMSAssignment> getPendingAssignmentsInRange(long currentTime, long endTime);
 }

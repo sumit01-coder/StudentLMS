@@ -102,6 +102,8 @@
     <string name="end_time">End Time</string>
     <string name="no_times_selected">No times selected</string>
     <string name="notes_optional">Notes (Optional)</string>
+    <string name="subject">Subject</string>
+    <string name="remind_me_when_starts">Remind me when session starts</string>
     
     <!-- Profile & Settings -->
     <string name="statistics">Statistics</string>

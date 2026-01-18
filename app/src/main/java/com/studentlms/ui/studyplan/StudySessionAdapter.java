@@ -78,8 +78,8 @@ public class StudySessionAdapter extends RecyclerView.Adapter<StudySessionAdapte
         }
 
         public void bind(StudySession session) {
-            // Display subject ID for now (could be improved with subject name lookup)
-            subjectText.setText("Subject #" + session.getSubjectId());
+            // Display subject Name
+            subjectText.setText(session.getSubjectName());
 
             // Format time
             SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());

@@ -25,8 +25,8 @@ public interface StudySessionDao {
     @Query("SELECT * FROM study_sessions ORDER BY startTime DESC")
     LiveData<List<StudySession>> getAllSessions();
 
-    @Query("SELECT * FROM study_sessions WHERE subjectId = :subjectId ORDER BY startTime DESC")
-    LiveData<List<StudySession>> getSessionsBySubject(int subjectId);
+    @Query("SELECT * FROM study_sessions WHERE subjectName = :subjectName ORDER BY startTime DESC")
+    LiveData<List<StudySession>> getSessionsBySubject(String subjectName);
 
     @Query("SELECT * FROM study_sessions WHERE startTime > :currentTime ORDER BY startTime ASC")
     LiveData<List<StudySession>> getUpcomingSessions(long currentTime);

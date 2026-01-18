@@ -75,72 +75,47 @@ public class ProfileFragment extends Fragment {
     @Nullable
     private void checkForUpdates() {
         Toast.makeText(getContext(), "Checking for updates...", Toast.LENGTH_SHORT).show();
-        new Thread(() -> {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("https://api.github.com/repos/sumit01-coder/StudentLMS/releases/latest")
-                        .build();
 
-                try (Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String json = response.body().string();
-                        JsonObject release = new Gson().fromJson(json, JsonObject.class);
-                        String tagName = release.get("tag_name").getAsString();
-                        JsonArray assets = release.has("assets") ? release.getAsJsonArray("assets") : new JsonArray();
+        String currentVersion = BuildConfig.VERSION_NAME;
 
+        com.studentlms.utils.GithubUpdateManager.checkForUpdates(currentVersion,
+                new com.studentlms.utils.GithubUpdateManager.UpdateCheckCallback() {
+                    @Override
+                    public void onUpdateFound(com.studentlms.utils.GithubUpdateManager.ReleaseInfo releaseInfo) {
                         if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> handleUpdateResponse(tagName, assets));
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> Toast
-                                    .makeText(getContext(), "Failed to check updates", Toast.LENGTH_SHORT).show());
+                            getActivity().runOnUiThread(() -> {
+                                new MaterialAlertDialogBuilder(requireContext())
+                                        .setTitle("Update Available: " + releaseInfo.tagName)
+                                        .setMessage(releaseInfo.body) // Show Release Notes
+                                        .setPositiveButton("Update Now", (dialog, which) -> {
+                                            UpdateDownloader.downloadAndInstall(requireContext(), releaseInfo.tagName,
+                                                    releaseInfo.downloadUrl);
+                                        })
+                                        .setNegativeButton("Later", null)
+                                        .show();
+                            });
                         }
                     }
-                }
-            } catch (Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(
-                            () -> Toast.makeText(getContext(), "Error checking updates", Toast.LENGTH_SHORT).show());
-                }
-            }
-        }).start();
-    }
 
-    private void handleUpdateResponse(String latestVersion, JsonArray assets) {
-        // Assuming tagName format is "v1.1.3" and versionName is "1.1.3"
-        String currentVersion = "v" + BuildConfig.VERSION_NAME;
+                    @Override
+                    public void onNoUpdateFound(String currentVersion, String latestVersion) {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "You are on the latest version (" + currentVersion + ")",
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
 
-        if (!latestVersion.equals(currentVersion)) {
-            // Find APK download URL
-            String apkUrl = null;
-            for (int i = 0; i < assets.size(); i++) {
-                JsonObject asset = assets.get(i).getAsJsonObject();
-                String name = asset.get("name").getAsString();
-                if (name.endsWith(".apk")) {
-                    apkUrl = asset.get("browser_download_url").getAsString();
-                    break;
-                }
-            }
-
-            if (apkUrl != null) {
-                String finalApkUrl = apkUrl;
-                new MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Update Available")
-                        .setMessage("New version " + latestVersion + " is available.\nCurrent: " + currentVersion)
-                        .setPositiveButton("Download", (dialog, which) -> {
-                            UpdateDownloader.downloadAndInstall(requireContext(), latestVersion, finalApkUrl);
-                        })
-                        .setNegativeButton("Later", null)
-                        .show();
-            } else {
-                Toast.makeText(getContext(), "Update info unavailable", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getContext(), "You are using the latest version: " + currentVersion, Toast.LENGTH_LONG)
-                    .show();
-        }
+                    @Override
+                    public void onError(String error) {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Check failed: " + error, Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
+                });
     }
 
     @Nullable
