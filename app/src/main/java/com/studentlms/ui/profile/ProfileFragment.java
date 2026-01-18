@@ -378,6 +378,8 @@ public class ProfileFragment extends Fragment {
         switchAutoSync.setChecked(autoSync);
         switchAppLock.setChecked(appLock);
 
+    }
+
     private void showERPLoginDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_erp_login, null);
         TextInputEditText inputUsername = dialogView.findViewById(R.id.input_erp_username);
