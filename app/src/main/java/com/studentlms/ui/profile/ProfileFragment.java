@@ -57,7 +57,7 @@ public class ProfileFragment extends Fragment {
     private SwitchMaterial switchNotifications;
     private SwitchMaterial switchAutoSync;
     private SwitchMaterial switchAppLock;
-    private ChipGroup themeChipGroup;
+
     private SharedPreferences preferences;
 
     // ERP components
@@ -165,7 +165,6 @@ public class ProfileFragment extends Fragment {
         switchNotifications = view.findViewById(R.id.switch_notifications);
         switchAutoSync = view.findViewById(R.id.switch_auto_sync);
         switchAppLock = view.findViewById(R.id.switch_app_lock);
-        themeChipGroup = view.findViewById(R.id.theme_chip_group);
 
         // Get shared preferences
         preferences = requireContext().getSharedPreferences("StudentLMSPrefs", Context.MODE_PRIVATE);
@@ -378,22 +377,6 @@ public class ProfileFragment extends Fragment {
         switchNotifications.setChecked(notifications);
         switchAutoSync.setChecked(autoSync);
         switchAppLock.setChecked(appLock);
-
-        // Set theme chip
-        int themeChipId;
-        switch (theme) {
-            case "light":
-                themeChipId = R.id.chip_theme_light;
-                break;
-            case "dark":
-                themeChipId = R.id.chip_theme_dark;
-                break;
-            default:
-                themeChipId = R.id.chip_theme_system;
-                break;
-        }
-        themeChipGroup.check(themeChipId);
-    }
 
     private void showERPLoginDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_erp_login, null);
