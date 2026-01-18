@@ -338,33 +338,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // Theme selector
-        themeChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (!checkedIds.isEmpty()) {
-                int chipId = checkedIds.get(0);
-                int themeMode;
-                String themeName;
-
-                if (chipId == R.id.chip_theme_light) {
-                    themeMode = AppCompatDelegate.MODE_NIGHT_NO;
-                    themeName = "light";
-                } else if (chipId == R.id.chip_theme_dark) {
-                    themeMode = AppCompatDelegate.MODE_NIGHT_YES;
-                    themeName = "dark";
-                } else {
-                    themeMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-                    themeName = "system";
-                }
-
-                // Save preference
-                preferences.edit().putString("theme", themeName).apply();
-
-                // Apply theme
-                AppCompatDelegate.setDefaultNightMode(themeMode);
-                Toast.makeText(getContext(), "Theme updated", Toast.LENGTH_SHORT).show();
-            }
-
-        });
     }
 
     private void loadPreferences() {
