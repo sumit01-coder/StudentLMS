@@ -15,7 +15,13 @@ import com.studentlms.ui.reminders.RemindersFragment;
 import com.studentlms.ui.resources.ResourcesFragment;
 import com.studentlms.ui.studyplan.StudyPlanFragment;
 import com.studentlms.ui.ai.AIChatFragment;
+import com.studentlms.ui.ai.AIChatFragment;
 import com.studentlms.utils.AppLockManager;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import java.util.concurrent.TimeUnit;
+import com.studentlms.services.UpdateCheckWorker;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,6 +78,20 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             bottomNavigation.setSelectedItemId(R.id.navigation_dashboard);
         }
+
+        scheduleUpdateCheck();
+    }
+
+    private void scheduleUpdateCheck() {
+        PeriodicWorkRequest updateRequest = new PeriodicWorkRequest.Builder(
+                UpdateCheckWorker.class,
+                12, TimeUnit.HOURS)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "update_check",
+                ExistingPeriodicWorkPolicy.KEEP,
+                updateRequest); // KEEP ensures we don't restart time on app restart
     }
 
     @Override
