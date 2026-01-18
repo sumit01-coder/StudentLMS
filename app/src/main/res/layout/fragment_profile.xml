@@ -273,6 +273,58 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+
+                <!-- Theme Setting -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="App Theme"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_theme_light"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Light"
+                        app:chipIcon="@drawable/ic_sun" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_theme_dark"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dark"
+                        app:chipIcon="@drawable/ic_moon" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_theme_system"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="System"
+                        app:chipIcon="@drawable/ic_sync"
+                        android:checked="true" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="?attr/colorOutline"
+                    android:alpha="0.3" />
+
                 <!-- Notification Setting -->
                 <LinearLayout
                     android:layout_width="match_parent"

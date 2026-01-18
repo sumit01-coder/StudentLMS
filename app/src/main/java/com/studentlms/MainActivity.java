@@ -17,6 +17,7 @@ import com.studentlms.ui.studyplan.StudyPlanFragment;
 import com.studentlms.ui.ai.AIChatFragment;
 import com.studentlms.ui.ai.AIChatFragment;
 import com.studentlms.utils.AppLockManager;
+import com.studentlms.utils.ThemeManager;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -32,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Apply saved theme before setting content view
+        ThemeManager.init(this);
+
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);

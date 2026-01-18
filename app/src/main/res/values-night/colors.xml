@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background Colors (Dark Mode) -->
+    <color name="background">#0D1117</color>
+    <color name="surface">#161B22</color>
+    <color name="card_background">#1C2128</color>
+    
+    <!-- Text Colors (Dark Mode) -->
+    <color name="text_primary">#E6EDF3</color>
+    <color name="text_secondary">#8B949E</color>
+    <color name="text_hint">#6E7681</color>
+    
+    <!-- Primary Colors (Brighter for dark mode) -->
+    <color name="primary">#7C8CF7</color>
+    <color name="primary_dark">#5B6FE8</color>
+    <color name="primary_light">#A3B1F9</color>
+    
+    <!-- Accent Colors (Keep vibrant) -->
+    <color name="accent">#F3A4FC</color>
+    <color name="accent_light">#F7BBFD</color>
+    
+    <!-- Status Colors (Brighter for dark mode) -->
+    <color name="success">#56D364</color>
+    <color name="warning">#F0A463</color>
+    <color name="error">#FF7B72</color>
+    <color name="info">#58A6FF</color>
+    
+    <!-- Subject Colors (Adjusted for dark) -->
+    <color name="subject_blue">#58A6FF</color>
+    <color name="subject_green">#56D364</color>
+    <color name="subject_purple">#B392F0</color>
+    <color name="subject_orange">#F0A463</color>
+    <color name="subject_red">#FF7B72</color>
+    <color name="subject_teal">#56D4DD</color>
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#7C8CF7</color>
+    <color name="gradient_end">#9F7AEA</color>
+</resources>

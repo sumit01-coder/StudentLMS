@@ -42,6 +42,9 @@ import android.net.Uri;
 import com.studentlms.BuildConfig;
 import com.studentlms.utils.UpdateDownloader;
 import com.google.gson.JsonArray;
+import com.studentlms.utils.ThemeManager;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.chip.Chip;
 
 public class ProfileFragment extends Fragment {
 
@@ -63,6 +66,8 @@ public class ProfileFragment extends Fragment {
     private MaterialButton btnSyncErp;
     private MaterialButton btnCheckUpdates;
     private MaterialButton btnForceBackgroundCheck;
+    private ChipGroup chipGroupTheme;
+    private Chip chipThemeLight, chipThemeDark, chipThemeSystem;
     private CredentialManager credentialManager;
     private android.widget.FrameLayout btnNotificationsHeader;
     private View notificationBadge;
@@ -179,6 +184,12 @@ public class ProfileFragment extends Fragment {
         btnCheckUpdates = view.findViewById(R.id.btn_check_updates);
         btnForceBackgroundCheck = view.findViewById(R.id.btn_force_background_check);
 
+        // Theme selector
+        chipGroupTheme = view.findViewById(R.id.chip_group_theme);
+        chipThemeLight = view.findViewById(R.id.chip_theme_light);
+        chipThemeDark = view.findViewById(R.id.chip_theme_dark);
+        chipThemeSystem = view.findViewById(R.id.chip_theme_system);
+
         credentialManager = new CredentialManager(requireContext());
 
         // Update ERP status only if components exist
@@ -258,6 +269,9 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Check logcat for [UpdateCheck] logs", Toast.LENGTH_LONG).show();
             });
         }
+
+        // Theme selector
+        setupThemeSelector();
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // TODO: Save notification preference
@@ -492,5 +506,40 @@ public class ProfileFragment extends Fragment {
                         "• Notifications: Get alerted instantly for new assignments.")
                 .setPositiveButton("Awesome!", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void setupThemeSelector() {
+        // Load saved theme preference
+        int currentTheme = ThemeManager.getThemeMode(requireContext());
+        switch (currentTheme) {
+            case ThemeManager.THEME_LIGHT:
+                chipThemeLight.setChecked(true);
+                break;
+            case ThemeManager.THEME_DARK:
+                chipThemeDark.setChecked(true);
+                break;
+            case ThemeManager.THEME_SYSTEM:
+            default:
+                chipThemeSystem.setChecked(true);
+                break;
+        }
+
+        // Set up theme change listener
+        chipGroupTheme.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (!checkedIds.isEmpty()) {
+                int checkedId = checkedIds.get(0);
+                int themeMode;
+
+                if (checkedId == chipThemeLight.getId()) {
+                    themeMode = ThemeManager.THEME_LIGHT;
+                } else if (checkedId == chipThemeDark.getId()) {
+                    themeMode = ThemeManager.THEME_DARK;
+                } else {
+                    themeMode = ThemeManager.THEME_SYSTEM;
+                }
+
+                ThemeManager.saveThemeMode(requireContext(), themeMode);
+            }
+        });
     }
 }
