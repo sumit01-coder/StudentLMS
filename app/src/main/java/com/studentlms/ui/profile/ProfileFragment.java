@@ -166,7 +166,7 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(requireContext(), "Checking for updates...", Toast.LENGTH_SHORT).show();
                 new android.os.Handler().postDelayed(() -> {
                     if (isAdded()) {
-                        Toast.makeText(requireContext(), "You are using the latest version: v1.1.2", Toast.LENGTH_LONG)
+                        Toast.makeText(requireContext(), "You are using the latest version: v1.1.3", Toast.LENGTH_LONG)
                                 .show();
                     }
                 }, 2000);
