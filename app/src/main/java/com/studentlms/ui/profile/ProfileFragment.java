@@ -29,7 +29,17 @@ import com.studentlms.utils.CredentialManager;
 
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import android.content.Intent;
+import android.net.Uri;
+import com.studentlms.BuildConfig;
 
 public class ProfileFragment extends Fragment {
 
@@ -53,6 +63,62 @@ public class ProfileFragment extends Fragment {
     private CredentialManager credentialManager;
     private android.widget.FrameLayout btnNotificationsHeader;
     private View notificationBadge;
+
+    @Nullable
+    private void checkForUpdates() {
+        Toast.makeText(getContext(), "Checking for updates...", Toast.LENGTH_SHORT).show();
+        new Thread(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/sumit01-coder/StudentLMS/releases/latest")
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String json = response.body().string();
+                        JsonObject release = new Gson().fromJson(json, JsonObject.class);
+                        String tagName = release.get("tag_name").getAsString();
+                        String htmlUrl = release.get("html_url").getAsString();
+
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> handleUpdateResponse(tagName, htmlUrl));
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> Toast
+                                    .makeText(getContext(), "Failed to check updates", Toast.LENGTH_SHORT).show());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(
+                            () -> Toast.makeText(getContext(), "Error checking updates", Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).start();
+    }
+
+    private void handleUpdateResponse(String latestVersion, String downloadUrl) {
+        // Assuming tagName format is "v1.1.3" and versionName is "1.1.3"
+        String currentVersion = "v" + BuildConfig.VERSION_NAME;
+
+        if (!latestVersion.equals(currentVersion)) {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Update Available")
+                    .setMessage("New version " + latestVersion + " is available.\nCurrent: " + currentVersion)
+                    .setPositiveButton("Download", (dialog, which) -> {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Later", null)
+                    .show();
+        } else {
+            Toast.makeText(getContext(), "You are using the latest version: " + currentVersion, Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
 
     @Nullable
     @Override
@@ -159,18 +225,8 @@ public class ProfileFragment extends Fragment {
             });
         }
 
-        if (btnCheckUpdates != null)
-
-        {
-            btnCheckUpdates.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Checking for updates...", Toast.LENGTH_SHORT).show();
-                new android.os.Handler().postDelayed(() -> {
-                    if (isAdded()) {
-                        Toast.makeText(requireContext(), "You are using the latest version: v1.1.3", Toast.LENGTH_LONG)
-                                .show();
-                    }
-                }, 2000);
-            });
+        if (btnCheckUpdates != null) {
+            btnCheckUpdates.setOnClickListener(v -> checkForUpdates());
         }
 
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
