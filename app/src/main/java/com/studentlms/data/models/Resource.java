@@ -11,14 +11,20 @@ public class Resource {
     private String type; // "PDF", "VIDEO", "LINK", "NOTE"
     private String urlOrPath;
     private int subjectId;
+    private String subjectName; // For display on cards
+    private int semester; // 1-8
     private long addedDate;
+    private boolean isFavorite; // For quick access
 
-    public Resource(String title, String type, String urlOrPath, int subjectId, long addedDate) {
+    public Resource(String title, String type, String urlOrPath, int subjectId, int semester, long addedDate) {
         this.title = title;
         this.type = type;
         this.urlOrPath = urlOrPath;
         this.subjectId = subjectId;
+        this.semester = semester;
         this.addedDate = addedDate;
+        this.isFavorite = false;
+        this.subjectName = "";
     }
 
     // Getters and Setters
@@ -62,11 +68,35 @@ public class Resource {
         this.subjectId = subjectId;
     }
 
+    public int getSemester() {
+        return semester;
+    }
+
+    public void setSemester(int semester) {
+        this.semester = semester;
+    }
+
     public long getAddedDate() {
         return addedDate;
     }
 
     public void setAddedDate(long addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }

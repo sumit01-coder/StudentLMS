@@ -13,7 +13,7 @@ import java.util.List;
 
 @Dao
 public interface SubjectDao {
-    @Insert
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
     long insert(Subject subject);
 
     @Update
@@ -25,6 +25,12 @@ public interface SubjectDao {
     @Query("SELECT * FROM subjects ORDER BY priority DESC")
     LiveData<List<Subject>> getAllSubjects();
 
+    @Query("SELECT * FROM subjects WHERE semester = :semester ORDER BY priority DESC")
+    LiveData<List<Subject>> getSubjectsBySemester(int semester);
+
     @Query("SELECT * FROM subjects WHERE id = :id")
     LiveData<Subject> getSubjectById(int id);
+
+    @Query("SELECT * FROM subjects WHERE subjectCode = :code LIMIT 1")
+    Subject getSubjectByCodeSync(String code);
 }

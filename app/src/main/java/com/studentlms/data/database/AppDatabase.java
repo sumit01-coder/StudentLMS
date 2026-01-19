@@ -17,7 +17,7 @@ import com.studentlms.data.models.*;
         Reminder.class,
         Resource.class,
         ChatMessage.class
-}, version = 4, exportSchema = false)
+}, version = 10, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;

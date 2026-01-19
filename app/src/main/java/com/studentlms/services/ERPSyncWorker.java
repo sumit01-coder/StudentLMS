@@ -14,6 +14,7 @@ import com.studentlms.services.lms.ERPPortalConnector;
 import com.studentlms.utils.CredentialManager;
 import com.studentlms.utils.NotificationHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ERPSyncWorker extends Worker {
@@ -40,6 +41,12 @@ public class ERPSyncWorker extends Worker {
 
             String username = credentialManager.getUsername();
             String password = credentialManager.getPassword();
+
+            // Check network connectivity first
+            if (!isNetworkAvailable()) {
+                Log.w(TAG, "No network connectivity - skipping ERP sync");
+                return Result.success(); // Success to avoid retry spam when offline
+            }
 
             // Connect to ERP
             ERPPortalConnector connector = new ERPPortalConnector();
@@ -71,14 +78,19 @@ public class ERPSyncWorker extends Worker {
 
             for (LMSAssignment assignment : assignments) {
                 // Check if assignment already exists
-                List<LMSAssignment> existing = assignmentDao.getAssignmentsBySubjectSync(
-                        assignment.getCourseName());
-
                 boolean exists = false;
-                for (LMSAssignment ex : existing) {
-                    if (ex.getTitle().equals(assignment.getTitle())) {
+
+                // 1. Check by unique LMS ID (if generated)
+                if (assignment.getLmsId() != null && !assignment.getLmsId().isEmpty()) {
+                    if (assignmentDao.countByLmsId(assignment.getLmsId()) > 0) {
                         exists = true;
-                        break;
+                    }
+                }
+
+                // 2. Fallback check by Title + Course Name (if ID missing or legacy)
+                if (!exists) {
+                    if (assignmentDao.countByTitleAndSubject(assignment.getTitle(), assignment.getCourseName()) > 0) {
+                        exists = true;
                     }
                 }
 
@@ -87,6 +99,8 @@ public class ERPSyncWorker extends Worker {
                     Log.d(TAG, "Added new assignment: " + assignment.getTitle());
                     newAssignmentsCount++;
                     lastNewAssignmentTitle = assignment.getTitle();
+                } else {
+                    Log.d(TAG, "Skipping duplicate assignment: " + assignment.getTitle());
                 }
             }
 
@@ -108,9 +122,43 @@ public class ERPSyncWorker extends Worker {
             Log.d(TAG, "ERP sync completed successfully. Synced " + assignments.size() + " assignments");
             return Result.success();
 
+        } catch (java.net.SocketTimeoutException e) {
+            Log.w(TAG, "Network timeout - will retry later: " + e.getMessage());
+            return Result.retry();
+        } catch (java.io.IOException e) {
+            Log.w(TAG, "Network error - will retry later: " + e.getMessage());
+            return Result.retry();
         } catch (Exception e) {
             Log.e(TAG, "ERP sync error: " + e.getMessage(), e);
             return Result.retry();
+        }
+    }
+
+    /**
+     * Check if device has network connectivity
+     */
+    private boolean isNetworkAvailable() {
+        android.net.ConnectivityManager connectivityManager = (android.net.ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) {
+            return false;
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            android.net.Network network = connectivityManager.getActiveNetwork();
+            if (network == null) {
+                return false;
+            }
+
+            android.net.NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+
+            return capabilities != null && (capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
+        } else {
+            android.net.NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         }
     }
 }

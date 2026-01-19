@@ -277,6 +277,11 @@ public class ERPPortalConnector {
                                 parseDateString(deadlineStr),
                                 "ERP_PORTAL");
 
+                        // Generate deterministic ID: Hash of Subject + Title + DueDate
+                        String rawId = subjectName + "|" + title + "|" + assignment.getDueDate();
+                        String uniqueId = java.util.UUID.nameUUIDFromBytes(rawId.getBytes()).toString();
+                        assignment.setLmsId(uniqueId);
+
                         assignments.add(assignment);
                         Log.d(TAG, "Assignment added: " + title);
 
@@ -329,5 +334,283 @@ public class ERPPortalConnector {
 
         // Return current time + 7 days as fallback
         return System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000);
+    }
+
+    /**
+     * Fetch subjects from LMS dashboard
+     */
+    public List<com.studentlms.data.models.Subject> fetchSubjects() {
+        List<com.studentlms.data.models.Subject> subjects = new ArrayList<>();
+
+        try {
+            // Navigate to LMS dashboard (cookies handled automatically)
+            Request dashboardRequest = new Request.Builder()
+                    .url(LMS_DASHBOARD_URL)
+                    .build();
+
+            Response dashboardResponse = client.newCall(dashboardRequest).execute();
+            if (!dashboardResponse.isSuccessful()) {
+                throw new IOException("Dashboard fetch failed with code: " + dashboardResponse.code());
+            }
+
+            String dashboardHtml = dashboardResponse.body().string();
+            Document dashboardDoc = Jsoup.parse(dashboardHtml);
+
+            // Verify we are logged in
+            if (dashboardDoc.title().contains("Login")) {
+                throw new IOException("Session expired or login failed");
+            }
+
+            Log.d(TAG, "Fetching subjects from dashboard...");
+
+            // Parse subject cards: div class="mt-card-item"
+            Elements subjectCards = dashboardDoc.select(".mt-card-item");
+            Log.d(TAG, "Found " + subjectCards.size() + " subject cards");
+
+            for (Element card : subjectCards) {
+                try {
+                    // Extract subject name and code from h3.mt-card-name
+                    Element titleElement = card.select(".mt-card-name").first();
+                    if (titleElement == null)
+                        continue;
+
+                    String fullTitle = titleElement.text().trim();
+                    // Format: "SECE3231 - Cloud Computing & Applications"
+                    String[] parts = fullTitle.split(" - ", 2);
+                    String subjectCode = parts.length > 0 ? parts[0].trim() : "";
+                    String subjectName = parts.length > 1 ? parts[1].trim() : fullTitle;
+
+                    // Extract semester from badge (format: "Semester - 6")
+                    Element semesterBadge = card.select(".label").first();
+                    int semesterNum = 0;
+                    if (semesterBadge != null) {
+                        String semText = semesterBadge.text().trim();
+                        if (semText.contains("-")) {
+                            String[] semParts = semText.split("-");
+                            if (semParts.length > 1) {
+                                try {
+                                    semesterNum = Integer.parseInt(semParts[1].trim());
+                                } catch (NumberFormatException e) {
+                                    Log.w(TAG, "Failed to parse semester: " + semText);
+                                }
+                            }
+                        }
+                    }
+
+                    // Extract content count (format: "Contents : 20")
+                    int contentCount = 0;
+                    Elements infoSpans = card.select(".mt-info span");
+                    for (Element span : infoSpans) {
+                        String text = span.text();
+                        if (text.contains("Contents") && text.contains(":")) {
+                            String[] countParts = text.split(":");
+                            if (countParts.length > 1) {
+                                try {
+                                    contentCount = Integer.parseInt(countParts[1].trim());
+                                } catch (NumberFormatException e) {
+                                    Log.w(TAG, "Failed to parse content count: " + text);
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    // Extract content URL from parent anchor tag
+                    String contentUrl = "";
+                    Element parentLink = card.parent();
+                    if (parentLink != null) {
+                        Log.d(TAG, "Card parent tag: " + parentLink.tagName());
+                        if (parentLink.tagName().equalsIgnoreCase("a")) {
+                            String href = parentLink.attr("href");
+                            Log.d(TAG, "Found href: " + href);
+                            if (href != null && !href.isEmpty()) {
+                                // Handle relative URL
+                                if (!href.startsWith("http")) {
+                                    contentUrl = "https://erp.ppsu.ac.in/StudentPanel/LMS/" + href;
+                                } else {
+                                    contentUrl = href;
+                                }
+                                Log.d(TAG, "Final Content URL: " + contentUrl);
+                            }
+                        } else {
+                            Log.w(TAG, "Parent is not 'a' tag. Trying grandparent.");
+                            Element grandParent = parentLink.parent();
+                            if (grandParent != null && grandParent.tagName().equalsIgnoreCase("a")) {
+                                String href = grandParent.attr("href");
+                                if (href != null && !href.isEmpty()) {
+                                    // Handle relative URL
+                                    if (!href.startsWith("http")) {
+                                        contentUrl = "https://erp.ppsu.ac.in/StudentPanel/LMS/" + href;
+                                    } else {
+                                        contentUrl = href;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Create Subject object
+                    com.studentlms.data.models.Subject subject = new com.studentlms.data.models.Subject(
+                            subjectName,
+                            subjectCode,
+                            getDefaultColorForSubject(subjects.size()),
+                            3, // Default priority
+                            0, // Total hours
+                            semesterNum,
+                            contentCount,
+                            contentUrl);
+
+                    subjects.add(subject);
+                    Log.d(TAG, "Parsed subject: " + subjectCode + " - " + subjectName + " (Sem " + semesterNum + ", "
+                            + contentCount + " contents)");
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Error parsing subject card", e);
+                }
+            }
+
+            Log.d(TAG, "Fetched " + subjects.size() + " subjects");
+            return subjects;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error fetching subjects: " + e.getMessage(), e);
+            return subjects; // Return empty list on error
+        }
+    }
+
+    /**
+     * Generate default color for subject
+     */
+    private String getDefaultColorForSubject(int index) {
+        String[] colors = { "#3498db", "#e74c3c", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c", "#34495e", "#e67e22" };
+        return colors[index % colors.length];
+    }
+
+    /**
+     * Fetch resources (Presentations, Assignments, etc.) for a specific subject
+     * content URL
+     */
+    public List<com.studentlms.data.models.Resource> fetchResources(String contentUrl) {
+        List<com.studentlms.data.models.Resource> resources = new ArrayList<>();
+        if (contentUrl == null || contentUrl.isEmpty()) {
+            return resources;
+        }
+
+        try {
+            Request request = new Request.Builder()
+                    .url(contentUrl)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                Log.e(TAG, "Failed to fetch content page: " + response.code());
+                return resources;
+            }
+
+            String html = response.body().string();
+            Document doc = Jsoup.parse(html);
+
+            // 1. Locate the content container
+            Element contentDiv = doc.getElementById("ctl00_cphPageContent_divContentTypeWiseContentDetails");
+            if (contentDiv == null) {
+                Log.w(TAG, "Content container not found in page");
+                return resources;
+            }
+
+            // 2. Map tab IDs to Category Names (e.g., #Content002 -> "Presentation")
+            // Selector: ul.nav-tabs > li > a
+            Elements tabs = contentDiv.select("ul.nav-tabs > li > a");
+            java.util.Map<String, String> tabIdToCategory = new java.util.HashMap<>();
+
+            for (Element tab : tabs) {
+                String href = tab.attr("href"); // e.g., "#Content002"
+                String text = tab.text().trim(); // e.g., "Presentation 1"
+                // Clean up text (remove count badge if present)
+                if (text.contains("\n")) {
+                    text = text.split("\n")[0].trim();
+                }
+                // Also remove numbers if text is like "Presentation 1"
+                text = text.replaceAll("\\d+$", "").trim();
+
+                if (href.startsWith("#")) {
+                    tabIdToCategory.put(href.substring(1), text); // Store parsed ID without #
+                }
+            }
+
+            // 3. Iterate through content panes
+            // Selector: div.tab-content > div.tab-pane
+            Elements panes = contentDiv.select("div.tab-content > div.tab-pane");
+
+            for (Element pane : panes) {
+                String paneId = pane.id();
+                String category = tabIdToCategory.get(paneId);
+                if (category == null)
+                    category = "Resource"; // Default
+
+                // Select rows in the table within this pane
+                Elements rows = pane.select("table tbody tr");
+
+                for (Element row : rows) {
+                    // Skip header rows
+                    if (row.select("th").size() > 0 || row.hasClass("TRDark"))
+                        continue;
+
+                    Elements cells = row.select("td");
+                    if (cells.size() < 3)
+                        continue;
+
+                    try {
+                        // Title is usually in the 2nd column (index 1)
+                        String title = cells.get(1).text().trim();
+
+                        // Download link is usually in the 3rd column (index 2)
+                        Element downloadLink = cells.get(2).select("a[href*='DownloadDocument.aspx']").first();
+
+                        // Fallback: Check if title itself is a link (View link)
+                        if (downloadLink == null) {
+                            Element titleLink = cells.get(1).select("a").first();
+                            if (titleLink != null) {
+                                // Usually view links are not direct downloads, but we can capture it
+                                // However, for now we prioritize DownloadDocument.aspx
+                            }
+                        }
+
+                        if (downloadLink != null) {
+                            String href = downloadLink.attr("href");
+                            String fullUrl = href;
+
+                            // Resolve relative path "../../Default/DownloadDocument.aspx"
+                            if (href.startsWith("../../")) {
+                                fullUrl = "https://erp.ppsu.ac.in/StudentPanel/" + href.substring(6); // Remove ../../
+                            } else if (href.startsWith("../")) {
+                                fullUrl = "https://erp.ppsu.ac.in/StudentPanel/LMS/" + href;
+                            }
+
+                            // Construct Resource object
+                            // Note: SubjectID and Semester will be set by the Repository/ViewModel context
+                            // We use -1 for now.
+                            com.studentlms.data.models.Resource res = new com.studentlms.data.models.Resource(
+                                    title,
+                                    category.toUpperCase(), // Type
+                                    fullUrl,
+                                    -1, // SubjectId buffer
+                                    0, // Semester buffer
+                                    System.currentTimeMillis());
+
+                            resources.add(res);
+                            Log.d(TAG, "Parsed Resource: " + title + " (" + category + ")");
+                        }
+
+                    } catch (Exception e) {
+                        Log.w(TAG, "Error parsing resource row: " + e.getMessage());
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error fetching resources: " + e.getMessage(), e);
+        }
+
+        return resources;
     }
 }

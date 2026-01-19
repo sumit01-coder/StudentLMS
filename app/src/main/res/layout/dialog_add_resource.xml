@@ -99,6 +99,24 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Semester Selector -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/semester_input_layout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/semester">
+
+            <AutoCompleteTextView
+                android:id="@+id/input_semester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:text="@string/semester" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"

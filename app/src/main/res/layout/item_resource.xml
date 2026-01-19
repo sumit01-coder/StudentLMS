@@ -4,97 +4,175 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    app:cardElevation="3dp"
+    app:cardCornerRadius="16dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- Header Row -->
+        <!-- Header with Icon, Title, and Type Badge -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="16dp"
             android:gravity="center_vertical">
 
-            <!-- Resource Type Icon -->
+            <!-- Resource Type Icon (Color-Coded) -->
             <ImageView
                 android:id="@+id/resource_type_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_resource"
-                app:tint="?attr/colorPrimary"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:background="@drawable/circle_background"
+                android:src="@drawable/ic_pdf_colored"
                 android:contentDescription="@string/resource_type" />
 
-            <!-- Title and Date -->
+            <!-- Title and Metadata -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginStart="12dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp">
 
                 <TextView
                     android:id="@+id/resource_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resource Title"
+                    android:text="Lecture Notes - Chapter 5"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="?attr/colorOnSurface" />
 
-                <TextView
-                    android:id="@+id/resource_date"
+                <!-- Subject Badge -->
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/subject_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Added: Jan 18, 2026"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:layout_marginTop="6dp"
+                    android:text="Computer Science"
+                    android:textSize="11sp"
+                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                    app:chipMinHeight="24dp"
+                    app:chipIconSize="14dp"
+                    app:chipIcon="@drawable/ic_subjects"
+                    app:iconStartPadding="2dp" />
 
             </LinearLayout>
 
-            <!-- Type Badge -->
+            <!-- Type Badge (Vertical) -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/type_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PDF"
                 android:textSize="11sp"
+                android:textStyle="bold"
                 app:chipBackgroundColor="?attr/colorPrimaryContainer"
                 app:chipMinHeight="28dp" />
 
         </LinearLayout>
 
-        <!-- Action Buttons -->
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOutlineVariant"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <!-- Metadata Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_schedule"
+                app:tint="?attr/colorOnSurfaceVariant"
+                android:contentDescription="Date added" />
+
+            <TextView
+                android:id="@+id/resource_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:text="Added 2 days ago"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <!-- Favorite Indicator -->
+            <ImageView
+                android:id="@+id/favorite_indicator"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_star"
+                app:tint="?attr/colorPrimary"
+                android:visibility="gone"
+                android:contentDescription="Favorited" />
+
+</LinearLayout>
+
+        <!-- Quick Actions Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             android:gravity="end">
 
+            <!-- Share Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_share"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_share"
+                app:iconSize="18dp"
+                app:iconPadding="4dp" />
+
+            <!-- Favorite Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_favorite"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorite"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_star_outline"
+                app:iconSize="18dp"
+                app:iconPadding="4dp" />
+
+            <!-- Open Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_open"
-                style="@style/Widget.Material3.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/open"
-                app:icon="@drawable/ic_open" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_delete"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete"
-                android:textColor="?attr/colorError" />
+                android:text="Open"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_open"
+                app:iconSize="18dp"
+                app:iconPadding="4dp" />
 
         </LinearLayout>
 

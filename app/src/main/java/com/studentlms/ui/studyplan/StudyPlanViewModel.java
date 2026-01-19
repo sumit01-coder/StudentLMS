@@ -54,6 +54,10 @@ public class StudyPlanViewModel extends AndroidViewModel {
         executorService.execute(() -> studySessionDao.insert(session));
     }
 
+    public long insertSessionAndGetId(StudySession session) {
+        return studySessionDao.insert(session);
+    }
+
     public void updateSession(StudySession session) {
         executorService.execute(() -> studySessionDao.update(session));
     }

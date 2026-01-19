@@ -31,6 +31,15 @@ public interface ResourceDao {
     @Query("SELECT * FROM resources WHERE type = :type ORDER BY addedDate DESC")
     LiveData<List<Resource>> getResourcesByType(String type);
 
+    @Query("SELECT * FROM resources WHERE semester = :semester ORDER BY addedDate DESC")
+    LiveData<List<Resource>> getResourcesBySemester(int semester);
+
+    @Query("SELECT * FROM resources WHERE semester = :semester AND type = :type ORDER BY addedDate DESC")
+    LiveData<List<Resource>> getResourcesBySemesterAndType(int semester, String type);
+
     @Query("SELECT * FROM resources WHERE title LIKE '%' || :query || '%' ORDER BY addedDate DESC")
     LiveData<List<Resource>> searchResources(String query);
+
+    @Query("SELECT COUNT(*) FROM resources WHERE urlOrPath = :url")
+    int countByUrl(String url);
 }

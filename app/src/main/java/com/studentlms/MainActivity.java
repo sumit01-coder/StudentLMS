@@ -14,6 +14,7 @@ import com.studentlms.ui.profile.ProfileFragment;
 import com.studentlms.ui.reminders.RemindersFragment;
 import com.studentlms.ui.resources.ResourcesFragment;
 import com.studentlms.ui.studyplan.StudyPlanFragment;
+import com.studentlms.ui.subjects.SubjectsFragment;
 import com.studentlms.ui.ai.AIChatFragment;
 import com.studentlms.ui.ai.AIChatFragment;
 import com.studentlms.utils.AppLockManager;
@@ -58,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.navigation_study_plan) {
                 selectedFragment = new StudyPlanFragment();
                 title = getString(R.string.nav_study_plan);
+            } else if (itemId == R.id.navigation_subjects) {
+                selectedFragment = new SubjectsFragment();
+                title = getString(R.string.nav_subjects);
             } else if (itemId == R.id.navigation_resources) {
                 selectedFragment = new ResourcesFragment();
                 title = getString(R.string.nav_resources);
             } else if (itemId == R.id.navigation_ai_chat) {
                 selectedFragment = new AIChatFragment();
                 title = getString(R.string.nav_ai_chat);
-            } else if (itemId == R.id.navigation_reminders) {
-                selectedFragment = new RemindersFragment();
-                title = getString(R.string.nav_reminders);
             }
 
             if (selectedFragment != null) {

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -40,7 +41,9 @@ public class ResourcesFragment extends Fragment {
     private FloatingActionButton fabAdd;
     private TextInputEditText searchInput;
     private ChipGroup filterChipGroup;
+    private Spinner semesterSpinner;
     private String currentFilter = "ALL";
+    private int currentSemester = 6; // Default semester
     private ActivityResultLauncher<String> filePickerLauncher;
     private TextInputEditText currentUrlInput;
 
@@ -75,6 +78,58 @@ public class ResourcesFragment extends Fragment {
         fabAdd = view.findViewById(R.id.fab_add_resource);
         searchInput = view.findViewById(R.id.search_input);
         filterChipGroup = view.findViewById(R.id.filter_chip_group);
+        semesterSpinner = view.findViewById(R.id.spinner_semester);
+
+        // Load saved semester from SharedPreferences
+        android.content.SharedPreferences prefs = requireContext().getSharedPreferences("StudentLMSPrefs",
+                android.content.Context.MODE_PRIVATE);
+        currentSemester = prefs.getInt("current_semester", 6);
+
+        // Set default selection (index 0 = All, 1-8 = Semesters 1-8)
+        semesterSpinner.setSelection(currentSemester);
+
+        // Check for subject filter arguments
+        if (getArguments() != null) {
+            String subjectCode = getArguments().getString("filter_subject");
+            if (subjectCode != null && !subjectCode.isEmpty()) {
+                // Pre-fill search with subject code to filter
+                if (searchInput != null) {
+                    searchInput.setText(subjectCode);
+                }
+                // Also optionally set semester
+                int semester = getArguments().getInt("filter_semester", 0);
+                if (semester > 0 && semesterSpinner != null) {
+                    // Assuming spinner has items 1-8 at indices 0-7, or similar mapping
+                    // We'll leave it for now or implement exact mapping if needed
+                }
+
+                // Handle content URL
+                String contentUrl = getArguments().getString("content_url");
+                if (contentUrl != null && !contentUrl.isEmpty()) {
+                    // Trigger native resource sync
+                    int filterSemester = getArguments().getInt("filter_semester", 0);
+                    viewModel.syncResources(contentUrl, subjectCode, filterSemester);
+
+                    MaterialButton openCourseBtn = view.findViewById(R.id.btn_open_course);
+                    if (openCourseBtn != null) {
+                        openCourseBtn.setVisibility(View.VISIBLE);
+                        openCourseBtn.setOnClickListener(v -> {
+                            try {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(contentUrl));
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), "Cannot open link: " + contentUrl, Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        });
+
+                        // Debugging: Show URL
+                        // Toast.makeText(getContext(), "URL Found: " + contentUrl,
+                        // Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }
     }
 
     private void setupViewModel() {
@@ -89,6 +144,18 @@ public class ResourcesFragment extends Fragment {
                 emptyState.setVisibility(View.VISIBLE);
             } else {
                 recyclerView.setVisibility(View.VISIBLE);
+                emptyState.setVisibility(View.GONE);
+            }
+        });
+
+        // Observe sync status
+        viewModel.getIsSyncing().observe(getViewLifecycleOwner(), isSyncing -> {
+            View progressBar = getView().findViewById(R.id.progress_sync);
+            if (progressBar != null) {
+                progressBar.setVisibility(isSyncing ? View.VISIBLE : View.GONE);
+            }
+            // If syncing, hide empty state even if empty
+            if (isSyncing) {
                 emptyState.setVisibility(View.GONE);
             }
         });
@@ -107,6 +174,15 @@ public class ResourcesFragment extends Fragment {
             @Override
             public void onDeleteResource(Resource resource) {
                 viewModel.deleteResource(resource);
+            }
+
+            @Override
+            public void onFavoriteToggle(Resource resource) {
+                // Update resource in database
+                viewModel.updateResource(resource);
+                Toast.makeText(requireContext(),
+                        resource.isFavorite() ? "Added to favorites" : "Removed from favorites",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -155,6 +231,20 @@ public class ResourcesFragment extends Fragment {
                 viewModel.setFilterType(currentFilter);
             }
         });
+
+        // Semester spinner listener
+        semesterSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                currentSemester = position;
+                viewModel.setFilterSemester(position);
+            }
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
     }
 
     private void openResource(Resource resource) {
@@ -191,6 +281,7 @@ public class ResourcesFragment extends Fragment {
         AutoCompleteTextView inputType = dialogView.findViewById(R.id.input_type);
         TextInputEditText inputUrl = dialogView.findViewById(R.id.input_url);
         TextInputEditText inputSubjectId = dialogView.findViewById(R.id.input_subject_id);
+        AutoCompleteTextView inputSemester = dialogView.findViewById(R.id.input_semester);
         MaterialButton btnBrowseFile = dialogView.findViewById(R.id.btn_browse_file);
 
         // Store reference to URL input for file picker callback
@@ -207,6 +298,16 @@ public class ResourcesFragment extends Fragment {
                 android.R.layout.simple_dropdown_item_1line, types);
         inputType.setAdapter(typeAdapter);
         inputType.setText(types[0], false);
+
+        // Setup semester dropdown
+        String[] semesters = getResources().getStringArray(R.array.semester_options);
+        ArrayAdapter<String> semesterAdapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, semesters);
+        inputSemester.setAdapter(semesterAdapter);
+        // Pre-fill with current semester (index matches currentSemester)
+        if (currentSemester >= 0 && currentSemester < semesters.length) {
+            inputSemester.setText(semesters[currentSemester], false);
+        }
 
         // Show dialog
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
@@ -226,6 +327,7 @@ public class ResourcesFragment extends Fragment {
             String type = inputType.getText().toString();
             String url = inputUrl.getText() != null ? inputUrl.getText().toString().trim() : "";
             String subjectIdText = inputSubjectId.getText() != null ? inputSubjectId.getText().toString().trim() : "0";
+            String semesterText = inputSemester.getText().toString();
 
             if (title.isEmpty()) {
                 inputTitle.setError("Title is required");
@@ -244,7 +346,19 @@ public class ResourcesFragment extends Fragment {
                 // Use default 0
             }
 
-            Resource resource = new Resource(title, type, url, subjectId, System.currentTimeMillis());
+            // Parse semester from selected text ("Semester 6" -> 6, "All Semesters" -> 0)
+            int semester = currentSemester; // Default to current
+            if (semesterText.startsWith("Semester ")) {
+                try {
+                    semester = Integer.parseInt(semesterText.substring(9).trim());
+                } catch (NumberFormatException e) {
+                    semester = currentSemester;
+                }
+            } else if (semesterText.equals("All Semesters")) {
+                semester = 0;
+            }
+
+            Resource resource = new Resource(title, type, url, subjectId, semester, System.currentTimeMillis());
 
             viewModel.insertResource(resource);
             dialog.dismiss();

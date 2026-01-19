@@ -45,4 +45,10 @@ public interface LMSAssignmentDao {
 
     @Query("SELECT * FROM lms_assignments WHERE isSubmitted = 0 AND dueDate > :currentTime AND dueDate <= :endTime ORDER BY dueDate ASC")
     List<LMSAssignment> getPendingAssignmentsInRange(long currentTime, long endTime);
+
+    @Query("SELECT COUNT(*) FROM lms_assignments WHERE lmsId = :lmsId")
+    int countByLmsId(String lmsId);
+
+    @Query("SELECT COUNT(*) FROM lms_assignments WHERE title = :title AND courseName = :courseName")
+    int countByTitleAndSubject(String title, String courseName);
 }

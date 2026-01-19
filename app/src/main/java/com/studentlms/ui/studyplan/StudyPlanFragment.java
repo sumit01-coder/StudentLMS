@@ -36,6 +36,7 @@ public class StudyPlanFragment extends Fragment {
     private FloatingActionButton fabAdd;
     private TextView completedCountText;
     private TextView totalHoursText;
+    private java.util.concurrent.ExecutorService executorService;
 
     @Nullable
     @Override
@@ -43,6 +44,7 @@ public class StudyPlanFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_study_plan, container, false);
 
+        executorService = java.util.concurrent.Executors.newSingleThreadExecutor();
         initViews(view);
         setupViewModel();
         setupRecyclerView();
@@ -126,6 +128,14 @@ public class StudyPlanFragment extends Fragment {
         TextView selectedTimesText = dialogView.findViewById(R.id.selected_times_text);
         com.google.android.material.checkbox.MaterialCheckBox checkboxRemindMe = dialogView
                 .findViewById(R.id.checkbox_remind_me);
+        android.widget.Spinner spinnerReminderTime = dialogView.findViewById(R.id.spinner_reminder_time);
+        TextView reminderTimeLabel = dialogView.findViewById(R.id.reminder_time_label);
+
+        // Toggle reminder time spinner visibility
+        checkboxRemindMe.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            spinnerReminderTime.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            reminderTimeLabel.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
 
         final Calendar startCal = Calendar.getInstance();
         final Calendar endCal = Calendar.getInstance();
@@ -207,49 +217,76 @@ public class StudyPlanFragment extends Fragment {
             StudySession session = new StudySession(selectedSubject, startCal.getTimeInMillis(),
                     endCal.getTimeInMillis(), notes, false);
 
-            viewModel.insertSession(session);
+            // Set reminder preferences
+            boolean hasReminder = checkboxRemindMe.isChecked();
+            session.setHasReminder(hasReminder);
 
-            if (checkboxRemindMe.isChecked()) {
-                // Schedule a one-time reminder?
-                // For now, let's just show a Toast that reminder is set (since we have the
-                // periodic worker)
-                // Or better, we can schedule a specific WorkRequest if needed later.
-                // Given the request "application use notification alert pending submission AND
-                // reminder",
-                // the periodic worker covers "reminders" for Assignments.
-                // For study sessions, users expecting "Remind me when session starts".
-                // We'll leave this as a todo or implement a simple alarm manager logic if
-                // requested.
-                // For this iteration, knowing the user request complexity text, we'll rely on
-                // the checkbox being saved (if we added it to model)
-                // But we didn't add it to model. So we should probably do something right now.
-                // Let's rely on the Assumption: "Reminder" referred to the Assignment
-                // "Reminder".
-                // But having the checkbox implies functionality.
-                // Let's schedule a notification via WorkManager with initialDelay.
-                scheduleStudySessionReminder(selectedSubject, startCal.getTimeInMillis());
+            if (hasReminder) {
+                // Parse reminder time from spinner (15, 30, or 60 minutes)
+                int reminderMinutes = 15; // default
+                int selectedPos = spinnerReminderTime.getSelectedItemPosition();
+                switch (selectedPos) {
+                    case 0:
+                        reminderMinutes = 15;
+                        break;
+                    case 1:
+                        reminderMinutes = 30;
+                        break;
+                    case 2:
+                        reminderMinutes = 60;
+                        break;
+                }
+                session.setReminderMinutesBefore(reminderMinutes);
+
+                // Make variables effectively final for lambda
+                final String finalSubject = selectedSubject;
+                final long finalStartTime = startCal.getTimeInMillis();
+                final int finalReminderMinutes = reminderMinutes;
+
+                // Insert session first to get its ID
+                executorService.execute(() -> {
+                    long sessionId = viewModel.insertSessionAndGetId(session);
+                    session.setId((int) sessionId);
+
+                    // Schedule the reminder on the main thread
+                    requireActivity().runOnUiThread(() -> {
+                        scheduleStudySessionReminder(finalSubject, finalStartTime,
+                                finalReminderMinutes, (int) sessionId);
+                    });
+                });
+            } else {
+                viewModel.insertSession(session);
             }
 
             dialog.dismiss();
         });
     }
 
-    private void scheduleStudySessionReminder(String subject, long startTime) {
-        long delay = startTime - System.currentTimeMillis();
+    private void scheduleStudySessionReminder(String subject, long startTime, int reminderMinutesBefore,
+            int sessionId) {
+        long delay = startTime - System.currentTimeMillis() - (reminderMinutesBefore * 60 * 1000);
+
         if (delay > 0) {
-            androidx.work.OneTimeWorkRequest reminderWork = new androidx.work.OneTimeWorkRequest.Builder(
-                    com.studentlms.services.AssignmentReminderWorker.class) // Re-using for now or create specific?
-                    // Actually AssignmentReminderWorker checks DB. It doesn't take input.
-                    // We should create a SimpleNotificationWorker or similar.
-                    // For now, I'll skip implementing a NEW worker just for this checkbox unless I
-                    // see it's critical.
-                    // I'll add a Toast.
-                    .setInitialDelay(delay, java.util.concurrent.TimeUnit.MILLISECONDS)
+            // Create input data for the worker
+            androidx.work.Data inputData = new androidx.work.Data.Builder()
+                    .putInt(com.studentlms.services.StudySessionReminderWorker.KEY_SESSION_ID, sessionId)
+                    .putString(com.studentlms.services.StudySessionReminderWorker.KEY_SUBJECT_NAME, subject)
+                    .putLong(com.studentlms.services.StudySessionReminderWorker.KEY_START_TIME, startTime)
                     .build();
-            // WorkManager.getInstance(requireContext()).enqueue(reminderWork);
-            android.widget.Toast
-                    .makeText(requireContext(), "Reminder set for " + subject, android.widget.Toast.LENGTH_SHORT)
-                    .show();
+
+            // Schedule one-time notification
+            androidx.work.OneTimeWorkRequest reminderWork = new androidx.work.OneTimeWorkRequest.Builder(
+                    com.studentlms.services.StudySessionReminderWorker.class)
+                    .setInitialDelay(delay, java.util.concurrent.TimeUnit.MILLISECONDS)
+                    .setInputData(inputData)
+                    .addTag("study_reminder_" + sessionId)
+                    .build();
+
+            androidx.work.WorkManager.getInstance(requireContext()).enqueue(reminderWork);
+
+            android.util.Log.d("StudyPlan", "Scheduled reminder for " + subject + " at " +
+                    new java.text.SimpleDateFormat("h:mm a")
+                            .format(new java.util.Date(startTime - (reminderMinutesBefore * 60 * 1000))));
         }
     }
 

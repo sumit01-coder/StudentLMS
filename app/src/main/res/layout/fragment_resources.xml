@@ -27,6 +27,39 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Statistics Cards -->
+        <include
+            android:id="@+id/statistics_cards"
+            layout="@layout/include_resource_statistics" />
+
+        <!-- Semester Dropdown (ERP Portal style) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/semester"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="12dp"
+                android:textColor="?attr/colorOnSurface" />
+            
+            <Spinner
+                android:id="@+id/spinner_semester"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:entries="@array/semester_options"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
         <!-- Filter Chips -->
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -81,6 +114,27 @@
             </com.google.android.material.chip.ChipGroup>
 
         </HorizontalScrollView>
+
+        <!-- Open Course Button (Hidden by default) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_open_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/open_course_in_erp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_link"
+            app:iconGravity="textStart" />
+
+        <!-- Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/progress_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
 
         <!-- Empty State -->
         <LinearLayout

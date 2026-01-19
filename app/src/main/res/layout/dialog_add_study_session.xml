@@ -37,6 +37,22 @@
             android:layout_height="wrap_content"
             android:text="@string/remind_me_when_starts" />
 
+        <TextView
+            android:id="@+id/reminder_time_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"            android:text="Remind me before:"
+            android:textColor="?attr/colorOnSurface"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/spinner_reminder_time"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            android:entries="@array/reminder_times" />
+
         <!-- Start and End Time Pickers -->
         <LinearLayout
             android:layout_width="match_parent"

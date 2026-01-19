@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_calendar"
         android:title="@string/nav_study_plan" />
     <item
+        android:id="@+id/navigation_subjects"
+        android:icon="@drawable/ic_subjects"
+        android:title="@string/nav_subjects" />
+    <item
         android:id="@+id/navigation_resources"
         android:icon="@drawable/ic_resources"
         android:title="@string/nav_resources" />
@@ -16,8 +20,4 @@
         android:id="@+id/navigation_ai_chat"
         android:icon="@drawable/ic_ai_chat"
         android:title="@string/nav_ai_chat" />
-    <item
-        android:id="@+id/navigation_reminders"
-        android:icon="@drawable/ic_notifications"
-        android:title="@string/nav_reminders" />
 </menu>

@@ -13,6 +13,9 @@ public class StudySession {
     private long endTime;
     private String notes;
     private boolean completed;
+    private boolean hasReminder;
+    private int reminderMinutesBefore; // 15, 30, or 60 minutes
+    private String workRequestId; // For canceling scheduled notifications
 
     public StudySession(String subjectName, long startTime, long endTime, String notes, boolean completed) {
         this.subjectName = subjectName;
@@ -20,6 +23,9 @@ public class StudySession {
         this.endTime = endTime;
         this.notes = notes;
         this.completed = completed;
+        this.hasReminder = false;
+        this.reminderMinutesBefore = 15; // Default 15 minutes
+        this.workRequestId = null;
     }
 
     // Getters and Setters
@@ -69,5 +75,29 @@ public class StudySession {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public boolean hasReminder() {
+        return hasReminder;
+    }
+
+    public void setHasReminder(boolean hasReminder) {
+        this.hasReminder = hasReminder;
+    }
+
+    public int getReminderMinutesBefore() {
+        return reminderMinutesBefore;
+    }
+
+    public void setReminderMinutesBefore(int reminderMinutesBefore) {
+        this.reminderMinutesBefore = reminderMinutesBefore;
+    }
+
+    public String getWorkRequestId() {
+        return workRequestId;
+    }
+
+    public void setWorkRequestId(String workRequestId) {
+        this.workRequestId = workRequestId;
     }
 }

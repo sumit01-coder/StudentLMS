@@ -135,4 +135,33 @@
     
     <!-- ERP Portal -->
     <string name="erp_portal_sync">ERP Portal Sync</string>
+    
+    <!-- Semester -->
+    <string name="select_semester">Select Semester</string>
+    <string name="current_semester">Current Semester</string>
+    <string name="all_semesters">All Semesters</string>
+    <string name="semester">Semester</string>
+    
+    <string-array name="semester_options">
+        <item>All Semesters</item>
+        <item>Semester 1</item>
+        <item>Semester 2</item>
+        <item>Semester 3</item>
+        <item>Semester 4</item>
+        <item>Semester 5</item>
+        <item>Semester 6</item>
+        <item>Semester 7</item>
+        <item>Semester 8</item>
+    </string-array>
+    
+    <!-- Subjects -->
+    <string name="nav_subjects">Subjects</string>
+    <string name="no_subjects">No Subjects Found</string>
+    <string name="sync_subjects">Sync Subjects</string>
+    <string name="subject_code">Subject Code</string>
+    <string name="syncing_subjects">Syncing subjects from ERP...</string>
+    <string name="sync_success">Subjects synced successfully</string>
+    <string name="sync_failed">Failed to sync subjects</string>
+    <string name="open_course_in_erp">Open Course in ERP</string>
 </resources>
+

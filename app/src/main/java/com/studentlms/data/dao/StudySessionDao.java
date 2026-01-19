@@ -36,4 +36,7 @@ public interface StudySessionDao {
 
     @Query("SELECT * FROM study_sessions WHERE startTime BETWEEN :startTime AND :endTime ORDER BY startTime ASC")
     LiveData<List<StudySession>> getSessionsInRange(long startTime, long endTime);
+
+    @Query("SELECT * FROM study_sessions WHERE startTime BETWEEN :startTime AND :endTime ORDER BY startTime ASC")
+    List<StudySession> getSessionsInRangeSync(long startTime, long endTime);
 }

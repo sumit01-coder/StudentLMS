@@ -36,35 +36,94 @@ public class AssignmentReminderWorker extends Worker {
             LMSAssignmentDao assignmentDao = database.lmsAssignmentDao();
 
             long currentTime = System.currentTimeMillis();
-            long windowEnd = currentTime + REMINDER_WINDOW_MS;
 
-            List<LMSAssignment> pendingAssignments = assignmentDao.getPendingAssignmentsInRange(currentTime, windowEnd);
+            // Check assignments in different time windows for multi-tier alerts
+            List<LMSAssignment> allPendingAssignments = assignmentDao.getPendingAssignmentsInRange(
+                    currentTime, currentTime + (7 * 24 * 60 * 60 * 1000)); // 7 days
 
-            if (pendingAssignments != null && !pendingAssignments.isEmpty()) {
-                Log.d(TAG, "Found " + pendingAssignments.size() + " pending assignments due soon.");
+            if (allPendingAssignments != null && !allPendingAssignments.isEmpty()) {
+                Log.d(TAG, "Found " + allPendingAssignments.size() + " pending assignments.");
 
-                // Alert for the most urgent one
-                LMSAssignment urgent = pendingAssignments.get(0);
+                // Separate assignments by urgency
+                for (LMSAssignment assignment : allPendingAssignments) {
+                    long timeUntilDue = assignment.getDueDate() - currentTime;
+                    int priority = determinePriority(timeUntilDue);
 
-                String timeRemaining = formatTimeRemaining(urgent.getDueDate() - currentTime);
-                String message = "Due in " + timeRemaining + ": " + urgent.getTitle() + " (" + urgent.getCourseName()
-                        + ")";
+                    // Only send notification if it matches one of our key windows
+                    if (shouldSendNotification(timeUntilDue)) {
+                        String title = getPriorityTitle(priority);
+                        String timeRemaining = formatTimeRemaining(timeUntilDue);
+                        String message = assignment.getTitle() + " - " + assignment.getCourseName() +
+                                "\nDue in " + timeRemaining;
 
-                NotificationHelper.showNewAssignmentNotification(
-                        getApplicationContext(),
-                        "Assignment Due Soon!",
-                        message);
+                        NotificationHelper.showAssignmentAlert(
+                                getApplicationContext(),
+                                title,
+                                message,
+                                assignment.getId(),
+                                priority);
 
-                // If multiple, maybe show a summary count too?
-                // For now, focusing on the most urgent one is good to avoid spam.
+                        Log.d(TAG, "Sent priority " + priority + " alert for: " + assignment.getTitle());
+                    }
+                }
             } else {
-                Log.d(TAG, "No pending assignments due in the next 24 hours.");
+                Log.d(TAG, "No pending assignments in the next 7 days.");
             }
 
             return Result.success();
         } catch (Exception e) {
             Log.e(TAG, "Error checking assignments", e);
             return Result.failure();
+        }
+    }
+
+    /**
+     * Determine priority level based on time until due
+     * 
+     * @param timeUntilDue milliseconds until assignment is due
+     * @return 1=LOW (7 days), 2=MEDIUM (3 days), 3=HIGH (1 day), 4=URGENT (2 hours)
+     */
+    private int determinePriority(long timeUntilDue) {
+        long hours = timeUntilDue / (60 * 60 * 1000);
+
+        if (hours <= 2) {
+            return 4; // URGENT - 2 hours or less
+        } else if (hours <= 24) {
+            return 3; // HIGH - 1 day or less
+        } else if (hours <= 72) {
+            return 2; // MEDIUM - 3 days or less
+        } else {
+            return 1; // LOW - 7 days or less
+        }
+    }
+
+    /**
+     * Check if we should send notification for this time window
+     * Only send at specific thresholds to avoid spam
+     */
+    private boolean shouldSendNotification(long timeUntilDue) {
+        long hours = timeUntilDue / (60 * 60 * 1000);
+
+        // Send at: 7 days, 3 days, 1 day, 2 hours
+        // With some tolerance (±2 hours) since worker runs periodically
+        return (hours >= 166 && hours <= 170) || // ~7 days
+                (hours >= 70 && hours <= 74) || // ~3 days
+                (hours >= 22 && hours <= 26) || // ~1 day
+                (hours <= 2 && hours >= 1); // 1-2 hours
+    }
+
+    private String getPriorityTitle(int priority) {
+        switch (priority) {
+            case 4:
+                return "⚠️ URGENT Assignment Due Soon!";
+            case 3:
+                return "⏰ Assignment Due Tomorrow";
+            case 2:
+                return "📝 Assignment Reminder";
+            case 1:
+                return "📌 Upcoming Assignment";
+            default:
+                return "Assignment Reminder";
         }
     }
 
